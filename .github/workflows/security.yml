@@ -1,3 +1,6 @@
+- name: Authenticate Snyk
+  run: snyk auth ${{ secrets.SNYK_TOKEN }}
+
 - name: Run Snyk Security Scan
   run: snyk test --all-projects
   env:
