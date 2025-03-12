@@ -1,7 +1,33 @@
-- name: Authenticate Snyk
-  run: snyk auth ${{ secrets.SNYK_TOKEN }}
+name: Security Scan
 
-- name: Run Snyk Security Scan
-  run: snyk test --all-projects
-  env:
-    SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  security:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run Bandit Security Scan
+        run: bandit -r .
+
+      - name: Install Snyk
+        run: npm install -g snyk
+
+      - name: Authenticate Snyk
+        run: snyk auth ${{ secrets.SNYK_TOKEN }}
+
+      - name: Run Snyk Security Scan
+        run: snyk test --all-projects
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
