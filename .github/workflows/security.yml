@@ -22,3 +22,13 @@ jobs:
 
       - name: Run Bandit Security Scan
         run: bandit -r .
+
+      # ✅ Add Snyk for security scanning
+      - name: Install Snyk
+        run: npm install -g snyk
+
+      - name: Authenticate Snyk
+        run: snyk auth ${{ secrets.SNYK_TOKEN }}
+
+      - name: Run Snyk Security Scan
+        run: snyk test || true
